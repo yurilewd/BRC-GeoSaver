@@ -1,6 +1,7 @@
 ﻿using MapStation.API;
 using Reptile;
 using System;
+using System.Globalization;
 using System.IO;
 using UnityEngine;
 
@@ -21,20 +22,29 @@ namespace GeoSaver
 
             public MoveStyle EquippedMoveStyle { get; set; }
             public MoveStyle CurrentMoveStyle { get; set; }
-            // Add new properties here as needed
 
             public string Serialize()
             {
                 return string.Join("|", new string[]
                 {
-                    $"{Location.x},{Location.y},{Location.z}",
-                    $"{Rotation.x},{Rotation.y},{Rotation.z},{Rotation.w}",
+                    FormatVector3(Location),
+                    FormatQuaternion(Rotation),
                     Stage.ToString(),
-                    Storage.ToString(),
-                    Boost.ToString(),
-                    $"{EquippedMoveStyle},{CurrentMoveStyle}",
-                    // Add new fields here as needed
+                    Storage.ToString(CultureInfo.InvariantCulture),
+                    Boost.ToString(CultureInfo.InvariantCulture),
+                    $"{EquippedMoveStyle},{CurrentMoveStyle}"
                 });
+            }
+
+            private string FormatVector3(Vector3 vector)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2}", vector.x, vector.y, vector.z);
+            }
+
+            private string FormatQuaternion(Quaternion quaternion)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}",
+                    quaternion.x, quaternion.y, quaternion.z, quaternion.w);
             }
 
             public static SaveData Deserialize(string data)
@@ -210,18 +220,27 @@ namespace GeoSaver
         private static Vector3 ParseVector3(string vectorString)
         {
             string[] values = vectorString.Split(',');
-            return new Vector3(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]));
+            return new Vector3(
+                float.Parse(values[0], CultureInfo.InvariantCulture),
+                float.Parse(values[1], CultureInfo.InvariantCulture),
+                float.Parse(values[2], CultureInfo.InvariantCulture)
+            );
         }
 
         private static Quaternion ParseQuaternion(string quaternionString)
         {
             string[] values = quaternionString.Split(',');
-            return new Quaternion(float.Parse(values[0]), float.Parse(values[1]), float.Parse(values[2]), float.Parse(values[3]));
+            return new Quaternion(
+                float.Parse(values[0], CultureInfo.InvariantCulture),
+                float.Parse(values[1], CultureInfo.InvariantCulture),
+                float.Parse(values[2], CultureInfo.InvariantCulture),
+                float.Parse(values[3], CultureInfo.InvariantCulture)
+            );
         }
 
         private static float ParseFloat(string floatString)
         {
-            return float.Parse(floatString);
+            return float.Parse(floatString, CultureInfo.InvariantCulture);
         }
     }
 }

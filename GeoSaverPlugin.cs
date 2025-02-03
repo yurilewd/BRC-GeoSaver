@@ -14,7 +14,7 @@ namespace GeoSaver
     {
         public const string MyGUID = "com.Yuri.GeoSaver";
         private const string PluginName = "GeoSaver";
-        private const string VersionString = "1.1.0";
+        private const string VersionString = "1.1.1";
 
         public static GeoSaverPlugin Instance { get; private set; }
         public string Dir => Path.GetDirectoryName(Info.Location);
